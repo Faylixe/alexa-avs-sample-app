@@ -3,9 +3,9 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.amazon.alexa.avs</groupId>
-  <artifactId>sample-java-client</artifactId>
+  <artifactId>java-client</artifactId>
   <version>20160207.0</version>
-  <name>Alexa Voice Service Sample Java Client</name>
+  <name>Alexa Voice Service - Java client with autologin</name>
   <url>https://developer.amazon.com/appsandservices/solutions/alexa/alexa-voice-service</url>
 
   <properties>
