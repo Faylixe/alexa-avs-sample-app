@@ -16,6 +16,7 @@ import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
 import com.amazon.alexa.avs.auth.companionservice.RegCodeDisplayHandler;
 import com.amazon.alexa.avs.config.DeviceConfig;
+import com.amazon.alexa.avs.config.DeviceConfig.CompanionServiceInformation;
 import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
@@ -151,9 +152,16 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     
     /** {@inheritDoc} **/
     @Override
-    public void displayRegCode(String regCode) {
-        final String regUrl = deviceConfig.getCompanionServiceInfo().getServiceUrl() + "/provision/" + regCode;
-        // TODO : Performs automatic login using selenium.
+    public void displayRegCode(final String registrationCode) {
+    	final CompanionServiceInformation information = deviceConfig.getCompanionServiceInfo();
+    	final StringBuilder builder = new StringBuilder();
+    	builder
+    		.append(information.getServiceUrl())
+    		.append("/provision/")
+    		.append(registrationCode);
+    	final String url = builder.toString();
+    	System.out.println("Registration URL : " + url);
+    	// TODO : Send post request to http://localhost:6969/registration/url
     }
 
     /** {@inheritDoc} **/
