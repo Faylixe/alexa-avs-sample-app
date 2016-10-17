@@ -1,6 +1,7 @@
 var express = require('express');
 var path = require('path');
 var bodyParser = require('body-parser');
+var http = require("http");
 var auth = require('./authentication.js');
 
 var app = express();
@@ -68,6 +69,9 @@ app.get('/authresponse', function (req, res) {
             res.send({ error: err.name, message: err.message });
         } else {
             res.send(reply);
+            http.get('http://localhost:6969/registration/success').on((e) => {
+              console.log('An error occurs while waking up agent : ' + e);
+            });
         }
     });
 });

@@ -12,6 +12,9 @@
  */
 package com.amazon.alexa.avs;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
+
 import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
 import com.amazon.alexa.avs.auth.companionservice.RegCodeDisplayHandler;
@@ -21,6 +24,8 @@ import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
+import org.eclipse.jetty.client.HttpClient;
+import org.eclipse.jetty.client.api.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +44,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
         START, STOP, PROCESSING;
     }
 
+    /** **/
+    private static final String EDGAR_URL = "http://localhost:6969/registration/url";
+    
 	/** Class logger. **/
     private static final Logger log = LoggerFactory.getLogger(AVSApp.class);
 
@@ -54,6 +62,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     /** Client state. **/
     private ClientState state;
 
+    /** **/
+    private final HttpClient http;
+    
     /**
      * Default constructor.
      * 
@@ -71,6 +82,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
                 config.getWakeWordAgentEnabled(),
                 new WakeWordIPCFactory(),
                 this);
+        this.http = new HttpClient();
         authSetup = new AuthSetup(config, this);
         authSetup.addAccessTokenListener(this);
         authSetup.addAccessTokenListener(controller);
@@ -160,8 +172,17 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     		.append("/provision/")
     		.append(registrationCode);
     	final String url = builder.toString();
-    	System.out.println("Registration URL : " + url);
-    	// TODO : Send post request to http://localhost:6969/registration/url
+    	log.info("Registration URL = {}", url);
+    	log.debug("Sending registration URL to edgar server");
+    	final Request request = http.POST(EDGAR_URL);
+    	request.param("url", url);
+    	try {
+			request.send();
+		}
+    	catch (final InterruptedException | TimeoutException | ExecutionException e) {
+			log.error(e.getMessage(), e);
+			// TODO : Kill client ?
+		}
     }
 
     /** {@inheritDoc} **/
