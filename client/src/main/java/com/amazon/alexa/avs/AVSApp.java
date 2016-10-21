@@ -12,6 +12,8 @@
  */
 package com.amazon.alexa.avs;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
@@ -23,7 +25,10 @@ import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -192,6 +197,15 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	password.sendKeys(deviceConfig.getLWAPassword());
     	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
+    	log.info("Username : {}", username);
+    	log.info("Password : {}", password);
+    	log.info("Button : {}", button);
+    	final File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+    	try {
+			FileUtils.copyFile(file, new File("render.jpg"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
     	log.info("Waiting for authentification callback to be triggered");
     	while (!tokenReceived.get()) {
     		try {
@@ -202,6 +216,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     			break;
     		}
     	}
+    	driver.quit();
     }
     
     /** {@inheritDoc} **/
