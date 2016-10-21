@@ -193,7 +193,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
     	log.info("Waiting for authentification callback to be triggered");
-    	while (tokenReceived.get()) {
+    	while (!tokenReceived.get()) {
     		try {
     			Thread.sleep(1000);
     		}
@@ -221,7 +221,8 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     @Override
     public synchronized void onAccessTokenReceived(final String accessToken) {
     	controller.onUserActivity();
-        //authSetup.onAccessTokenReceived(accessToken);
+    	log.info("Access token received : {}", accessToken);
+        authSetup.onAccessTokenReceived(accessToken);
     	tokenReceived.set(true);
     }
 
