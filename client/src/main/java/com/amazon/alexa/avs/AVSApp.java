@@ -12,8 +12,6 @@
  */
 package com.amazon.alexa.avs;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
@@ -25,10 +23,7 @@ import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -181,7 +176,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	final DesiredCapabilities capabilites = new DesiredCapabilities();
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
-    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=cookies.txt"});
     	final WebDriver driver = new PhantomJSDriver(capabilites);
     	driver.get(url);
     	log.info("Title : {}", driver.getTitle());
@@ -197,15 +192,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	password.sendKeys(deviceConfig.getLWAPassword());
     	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
-    	log.info("Username : {}", username);
-    	log.info("Password : {}", password);
-    	log.info("Button : {}", button);
-    	final File file = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-    	try {
-			FileUtils.copyFile(file, new File("render.jpg"));
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
     	log.info("Waiting for authentification callback to be triggered");
     	while (!tokenReceived.get()) {
     		try {
