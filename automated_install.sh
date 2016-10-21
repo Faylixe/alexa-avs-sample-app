@@ -534,6 +534,16 @@ cd $Wake_Word_Agent_Loc/tst && cmake . && make -j4
 chown -R $User:$Group $Origin
 chown -R $User:$Group /home/$User/.asoundrc
 
+
+echo "========== Installing PhantomJS for autologin =========="
+cd /tmp
+wget https://github.com/spfaffly/phantomjs-linux-armv6l/archive/master.zip
+unzip master.zip
+cd phantomjs-linux-armv6l-master
+tar -zxvf *.tar.gz
+
+$ ./phantomjs-2.0.1-development-linux-armv6l/bin/phantomjs --version
+
 echo ""
 echo '============================='
 echo '*****************************'
