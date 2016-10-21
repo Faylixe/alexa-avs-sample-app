@@ -12,8 +12,12 @@
  */
 package com.amazon.alexa.avs;
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
@@ -24,8 +28,6 @@ import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.Request;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,9 +64,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     /** Client state. **/
     private ClientState state;
 
-    /** **/
-    private final HttpClient http;
-    
     /**
      * Default constructor.
      * 
@@ -82,7 +81,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
                 config.getWakeWordAgentEnabled(),
                 new WakeWordIPCFactory(),
                 this);
-        this.http = new HttpClient();
         authSetup = new AuthSetup(config, this);
         authSetup.addAccessTokenListener(this);
         authSetup.addAccessTokenListener(controller);
@@ -174,15 +172,21 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	final String url = builder.toString();
     	log.info("Registration URL = {}", url);
     	log.debug("Sending registration URL to edgar server");
-    	final Request request = http.POST(EDGAR_URL);
-    	request.param("url", url);
     	try {
-			request.send();
-		}
-    	catch (final InterruptedException | TimeoutException | ExecutionException e) {
+    		final byte [] data = ("url=" + url).getBytes(StandardCharsets.UTF_8);
+    		final URL factory = new URL(EDGAR_URL);
+    		final HttpsURLConnection connection = (HttpsURLConnection) factory.openConnection();
+    		connection.setRequestMethod("POST");
+    		connection.setDoOutput(true);
+    		connection.setRequestProperty("charset", "utf-8");
+    		connection.setRequestProperty("Content-Length", Integer.toString(data.length));
+    		try (final DataOutputStream stream = new DataOutputStream(connection.getOutputStream())) {
+    			stream.write(data);
+    		}
+    	}
+    	catch (final IOException e) {
 			log.error(e.getMessage(), e);
-			// TODO : Kill client ?
-		}
+    	}
     }
 
     /** {@inheritDoc} **/
