@@ -172,8 +172,11 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     private void authenticate(final String url) {
     	log.info("Registration URL = {}", url);
     	log.info("Starting phantom JS driver ...");
-    	final WebDriver driver = new PhantomJSDriver();
+    	final PhantomJSDriver driver = new PhantomJSDriver();
     	driver.navigate().to(url);
+    	log.info("Current URL : " + driver.getCurrentUrl());
+    	log.info("Title : " + driver.getTitle());
+    	log.info("Source : " + driver.getPageSource());
     	new WebDriverWait(driver, 1000)
     		.until(ExpectedConditions
 	    		.and(
