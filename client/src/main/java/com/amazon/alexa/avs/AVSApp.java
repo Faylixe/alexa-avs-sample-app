@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
@@ -188,13 +189,16 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	catch (final IOException e) {
 			log.error(e.getMessage(), e);
     	}
+    	try (final Scanner scanner = new Scanner(System.in)) {
+    		scanner.next();
+    	}
     }
 
     /** {@inheritDoc} **/
     @Override
     public synchronized void onAccessTokenReceived(final String accessToken) {
     	controller.onUserActivity();
-        authSetup.onAccessTokenReceived(accessToken);
+        //authSetup.onAccessTokenReceived(accessToken);
     }
 
     /** {@inheritDoc} **/
