@@ -14,10 +14,9 @@ package com.amazon.alexa.avs;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
@@ -175,7 +174,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	try {
     		final byte [] data = ("url=" + url).getBytes(StandardCharsets.UTF_8);
     		final URL factory = new URL(EDGAR_URL);
-    		final HttpsURLConnection connection = (HttpsURLConnection) factory.openConnection();
+    		final HttpURLConnection connection = (HttpURLConnection) factory.openConnection();
     		connection.setRequestMethod("POST");
     		connection.setDoOutput(true);
     		connection.setRequestProperty("charset", "utf-8");
