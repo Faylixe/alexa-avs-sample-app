@@ -12,7 +12,6 @@
  */
 package com.amazon.alexa.avs;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
@@ -28,6 +27,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriverService;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -172,7 +173,10 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     private void authenticate(final String url) {
     	log.info("Registration URL = {}", url);
     	log.info("Starting phantom JS driver ...");
-    	final PhantomJSDriver driver = new PhantomJSDriver();
+    	final DesiredCapabilities capabilites = new DesiredCapabilities();
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
+    	final WebDriver driver = new PhantomJSDriver(capabilites);
     	driver.navigate().to(url);
     	log.info("Current URL : " + driver.getCurrentUrl());
     	log.info("Title : " + driver.getTitle());
@@ -239,8 +243,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
      * @throws Exception If any error occurs while executing client.
      */
     public static void main(final String[] args) throws Exception {
-    	final File binary = new File("/usr/local/bin/phantomjs");
-    	System.setProperty("phantomjs.binary.path", binary.getAbsolutePath());
     	final DeviceConfig configuration = getDeviceConfiguration(args);
     	final AVSApp application = new AVSApp(configuration);
     	application.run();
