@@ -46,7 +46,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
 
     /** **/
-    private static final String EDGAR_URL = "http://localhost:6969/registration/url";
+    private static final String EDGAR_URL = "http://localhost:5000/registration/url";
     
 	/** Class logger. **/
     private static final Logger log = LoggerFactory.getLogger(AVSApp.class);
