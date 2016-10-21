@@ -46,11 +46,13 @@ alexa = Alexa()
 @application.route('/registration/url', methods=['GET'])
 def getRegistrationURL():
     """ Endpoint for getting LWA registration URL as plain text. """
+    print('Registration request URL received')
     return alexa.registrationURL, 200
 
 @application.route('/registration/url', methods=['POST'])
 def setRegistrationURL():
     """ Endpoint for setting LWA registration URL. """
+    print('Received registration URL : %s' % request['url'])
     alexa.registrationURL = request['url']
     return 'OK', 200
 
@@ -61,6 +63,6 @@ def authentificationSuccess():
     return 'OK', 200
 
 if __name__ == '__main__':
-    alexa.startCompanionService()
-    alexa.startClient()
+    #alexa.startCompanionService()
+    #alexa.startClient()
     application.run(host='0.0.0.0')
