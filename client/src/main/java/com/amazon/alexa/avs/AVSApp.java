@@ -182,6 +182,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	log.info("Set cookieEnabled at phantom level");
     	driver.get(url);
     	log.info("Title : {}", driver.getTitle());
+    	log.info("URL : {}", driver.getCurrentUrl());
     	new WebDriverWait(driver, 1000)
     		.until(ExpectedConditions
 	    		.and(
