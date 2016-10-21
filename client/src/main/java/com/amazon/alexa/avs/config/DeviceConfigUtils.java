@@ -112,9 +112,10 @@ public final class DeviceConfigUtils {
                     configObject.getString(DeviceConfig.PROVISIONING_METHOD, null);
             String avsHost = configObject.getString(DeviceConfig.AVS_HOST, null);
             boolean wakeWordAgentEnabled = configObject.getBoolean(DeviceConfig.WAKE_WORD_AGENT_ENABLED, false);
-            
+            String username = configObject.getString(DeviceConfig.LWA_USERNAME, null);
+            String password = configObject.getString(DeviceConfig.LWA_PASSWORD, null);
             DeviceConfig deviceConfig = new DeviceConfig(productId, dsn, provisioningMethod,
-            		wakeWordAgentEnabled, companionAppInfo, companionServiceInfo, avsHost);
+            		wakeWordAgentEnabled, companionAppInfo, companionServiceInfo, avsHost, username, password);
 
             return deviceConfig;
         } catch (FileNotFoundException e) {

@@ -36,7 +36,10 @@ public class DeviceConfig {
     public static final String PROVISIONING_METHOD = "provisioningMethod";
     public static final String AVS_HOST = "avsHost";
     public static final String WAKE_WORD_AGENT_ENABLED = "wakeWordAgentEnabled";
-
+    
+    public static final String LWA_USERNAME = "username";
+    public static final String LWA_PASSWORD = "password";
+    
     /*
      * Required parameters from the config file.
      */
@@ -45,6 +48,9 @@ public class DeviceConfig {
     private final ProvisioningMethod provisioningMethod;
     private final URL avsHost;
 
+    private final String username;
+    private final String password;
+    
     /*
      * Optional parameters from the config file.
      */
@@ -99,7 +105,7 @@ public class DeviceConfig {
      */
     public DeviceConfig(String productId, String dsn, String provisioningMethod,
             boolean wakeWordAgentEnabled, CompanionAppInformation companionAppInfo,
-            CompanionServiceInformation companionServiceInfo, String avsHost) {
+            CompanionServiceInformation companionServiceInfo, String avsHost, String username, String password) {
 
         if (StringUtils.isBlank(productId)) {
             throw new MalformedConfigException(PRODUCT_ID + " is blank in your config file.");
@@ -142,13 +148,15 @@ public class DeviceConfig {
         }
 
         this.wakeWordAgentEnabled = wakeWordAgentEnabled;
+        this.username = username;
+        this.password = password;
     }
 
     public DeviceConfig(String productId, String dsn, String provisioningMethod,
             boolean wakeWordAgentEnabled, CompanionAppInformation companionAppInfo,
-            CompanionServiceInformation companionServiceInfo) {
+            CompanionServiceInformation companionServiceInfo, String username, String password) {
         this(productId, dsn, provisioningMethod, wakeWordAgentEnabled, companionAppInfo,
-                companionServiceInfo, DEFAULT_HOST);
+                companionServiceInfo, DEFAULT_HOST, username, password);
     }
 
     /**
@@ -172,6 +180,22 @@ public class DeviceConfig {
         return dsn;
     }
 
+    /**
+     * 
+     * @return LWA username.
+     */
+    public String getLWAUsername() {
+    	return username;
+    }
+    
+    /**
+     * 
+     * @return LWA password.
+     */
+    public String getLWAPassword() {
+    	return password;
+    }
+    
     /**
      * @return provisioningMethod.
      */

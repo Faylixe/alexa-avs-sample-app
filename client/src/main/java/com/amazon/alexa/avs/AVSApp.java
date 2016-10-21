@@ -18,6 +18,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
 import com.amazon.alexa.avs.auth.AuthSetup;
@@ -28,6 +29,14 @@ import com.amazon.alexa.avs.config.DeviceConfigUtils;
 import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,9 +54,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     private enum ClientState {
         START, STOP, PROCESSING;
     }
-
-    /** **/
-    private static final String EDGAR_URL = "http://localhost:5000/registration/url";
     
 	/** Class logger. **/
     private static final Logger log = LoggerFactory.getLogger(AVSApp.class);
@@ -64,6 +70,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     /** Client state. **/
     private ClientState state;
 
+    /** Flag for authentification. **/
+    private final AtomicBoolean tokenReceived;
+    
     /**
      * Default constructor.
      * 
@@ -86,6 +95,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
         authSetup = new AuthSetup(config, this);
         authSetup.addAccessTokenListener(this);
         authSetup.addAccessTokenListener(controller);
+        this.tokenReceived = new AtomicBoolean(false);
     }
 
     /** {@inheritDoc} **/
@@ -162,6 +172,40 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
         }
     }
     
+    /**
+     * 
+     * @param url
+     */
+    private void authenticate(final String url) {
+    	log.info("Registration URL = {}", url);
+    	log.info("Starting phantom JS driver ...");
+    	final WebDriver driver = new PhantomJSDriver();
+    	driver.navigate().to(url);
+    	new WebDriverWait(driver, 1000)
+    		.until(ExpectedConditions
+	    		.and(
+	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_email")),
+	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password")),
+	    				ExpectedConditions.presenceOfElementLocated(By.id("signInSubmit-input"))));
+    	log.info("Auto logging in to LWA");
+    	final WebElement username = driver.findElement(By.id("ap_email"));
+    	final WebElement password = driver.findElement(By.id("ap_password"));
+    	username.sendKeys(deviceConfig.getLWAUsername());
+    	password.sendKeys(deviceConfig.getLWAPassword());
+    	final WebElement button = driver.findElement(By.id("signInSubmit-input"));
+    	button.click();
+    	log.info("Waiting for authentification callback to be triggered");
+    	while (tokenReceived.get()) {
+    		try {
+    			Thread.sleep(1000);
+    		}
+    		catch (final InterruptedException e) {
+    			log.error("Waiting thread interrupted", e);
+    			break;
+    		}
+    	}
+    }
+    
     /** {@inheritDoc} **/
     @Override
     public void displayRegCode(final String registrationCode) {
@@ -172,26 +216,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     		.append("/provision/")
     		.append(registrationCode);
     	final String url = builder.toString();
-    	log.info("Registration URL = {}", url);
-    	log.debug("Sending registration URL to edgar server");
-    	try {
-    		final byte [] data = ("url=" + url).getBytes(StandardCharsets.UTF_8);
-    		final URL factory = new URL(EDGAR_URL);
-    		final HttpURLConnection connection = (HttpURLConnection) factory.openConnection();
-    		connection.setRequestMethod("POST");
-    		connection.setDoOutput(true);
-    		connection.setRequestProperty("charset", "utf-8");
-    		connection.setRequestProperty("Content-Length", Integer.toString(data.length));
-    		try (final DataOutputStream stream = new DataOutputStream(connection.getOutputStream())) {
-    			stream.write(data);
-    		}
-    	}
-    	catch (final IOException e) {
-			log.error(e.getMessage(), e);
-    	}
-    	try (final Scanner scanner = new Scanner(System.in)) {
-    		scanner.next();
-    	}
+    	authenticate(url);
     }
 
     /** {@inheritDoc} **/
@@ -199,6 +224,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     public synchronized void onAccessTokenReceived(final String accessToken) {
     	controller.onUserActivity();
         //authSetup.onAccessTokenReceived(accessToken);
+    	tokenReceived.set(true);
     }
 
     /** {@inheritDoc} **/
