@@ -184,14 +184,13 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     		.until(ExpectedConditions
 	    		.and(
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_email")),
-	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password")),
-	    				ExpectedConditions.presenceOfElementLocated(By.id("signInSubmit-input"))));
+	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password"))));
     	log.info("Auto logging in to LWA");
     	final WebElement username = driver.findElement(By.id("ap_email"));
     	final WebElement password = driver.findElement(By.id("ap_password"));
     	username.sendKeys(deviceConfig.getLWAUsername());
     	password.sendKeys(deviceConfig.getLWAPassword());
-    	final WebElement button = driver.findElement(By.id("signInSubmit-input"));
+    	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
     	log.info("Waiting for authentification callback to be triggered");
     	while (tokenReceived.get()) {
