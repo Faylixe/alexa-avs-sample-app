@@ -24,6 +24,7 @@ import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -179,7 +180,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=/tmp/cookies.txt"});
     	final PhantomJSDriver driver = new PhantomJSDriver(capabilites);
     	log.info("Set cookieEnabled at phantom level");
-    	driver.executePhantomJS("phantom.cookieEnabled = true;", new Object[]{});
     	driver.get(url);
     	log.info("Title : {}", driver.getTitle());
     	new WebDriverWait(driver, 1000)
@@ -188,6 +188,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_email")),
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password"))));
     	log.info("Auto logging in to LWA");
+    	driver.manage().addCookie(new Cookie("foo", "bar"));
     	final WebElement username = driver.findElement(By.id("ap_email"));
     	final WebElement password = driver.findElement(By.id("ap_password"));
     	username.sendKeys(deviceConfig.getLWAUsername());
