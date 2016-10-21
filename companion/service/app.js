@@ -41,7 +41,7 @@ app.get('/provision/accessToken', function (req, res) {
 
     auth.getAccessToken(req.query.sessionId, function (err, reply) {
         if (err) {
-            console.log('ERROR : 'err);
+            console.log('ERROR : ', err);
             res.status(err.status);
             res.send({ error: err.name, message: err.message });
         } else {
