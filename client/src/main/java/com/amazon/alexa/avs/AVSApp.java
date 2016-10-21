@@ -177,7 +177,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=/tmp/cookies.txt"});
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=/tmp/cookies.txt"});
-    	final WebDriver driver = new PhantomJSDriver(capabilites);
+    	final PhantomJSDriver driver = new PhantomJSDriver(capabilites);
+    	log.info("Set cookieEnabled at phantom level");
+    	driver.executePhantomJS("phantom.cookieEnabled = true;", new Object[]{});
     	driver.get(url);
     	log.info("Title : {}", driver.getTitle());
     	new WebDriverWait(driver, 1000)
