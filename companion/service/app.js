@@ -11,6 +11,7 @@ app.use(bodyParser.json());
  * The endpoint for the device to request a registration code to then show to the user.
  */
 app.get('/provision/regCode', function (req, res) {
+    console.log('/provision/regCode request received');
     if (!req.client.authorized) {
         res.status(401);
         res.send({ error: "Unauthorized", message: "You are not authorized to access this URL. Make sure your client certificate is set up properly." });
@@ -54,7 +55,8 @@ app.get('/provision/accessToken', function (req, res) {
  * The endpoint for the customer to visit and get redirected to LWA to login.
  */
 app.get('/provision/:regCode', function (req, res, next) {
-    auth.register(req.params.regCode, res, function (err) {
+  console.log('/provision/:regCode request received');
+  auth.register(req.params.regCode, res, function (err) {
         // on success gets redirect so wont return to a callback.
         res.status(err.status);
         res.send({ error: err.name, message: err.message });
@@ -66,6 +68,7 @@ app.get('/provision/:regCode', function (req, res, next) {
  * The endpoint that LWA will redirect to to include the authorization code and state code.
  */
 app.get('/authresponse', function (req, res) {
+    console.log('/authresponse request received');
     auth.authresponse(req.query.code, req.query.state, function (err, reply) {
         if (err) {
             res.status(err.status);
