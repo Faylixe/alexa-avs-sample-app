@@ -31,6 +31,8 @@ app.get('/provision/regCode', function (req, res) {
  * The endpoint for the device to request a new accessToken when the previous one expires.
  */
 app.get('/provision/accessToken', function (req, res) {
+
+    console.log('/provision/accessToken request received');
     if (!req.client.authorized) {
         res.status(401);
         res.send({ error: "Unauthorized", message: "You are not authorized to access this URL. Make sure your client certificate is set up properly." });
@@ -39,6 +41,7 @@ app.get('/provision/accessToken', function (req, res) {
 
     auth.getAccessToken(req.query.sessionId, function (err, reply) {
         if (err) {
+            console.log('ERROR : 'err);
             res.status(err.status);
             res.send({ error: err.name, message: err.message });
         } else {

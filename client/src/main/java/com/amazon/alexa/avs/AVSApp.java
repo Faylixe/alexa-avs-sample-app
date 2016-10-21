@@ -71,6 +71,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
      */
     private AVSApp(final DeviceConfig config) throws Exception {
         this.deviceConfig = config;
+        log.info("Creating AVS controller");
         controller = new AVSController(
         		this,
                 new AVSAudioPlayerFactory(),
@@ -80,6 +81,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
                 config.getWakeWordAgentEnabled(),
                 new WakeWordIPCFactory(),
                 this);
+        log.info("Creating Authentification Setup");
         authSetup = new AuthSetup(config, this);
         authSetup.addAccessTokenListener(this);
         authSetup.addAccessTokenListener(controller);
