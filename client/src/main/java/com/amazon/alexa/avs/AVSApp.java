@@ -192,6 +192,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	password.sendKeys(deviceConfig.getLWAPassword());
     	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
+    	log.info(driver.getPageSource());
     	log.info("Waiting for authentification callback to be triggered");
     	while (!tokenReceived.get()) {
     		try {
