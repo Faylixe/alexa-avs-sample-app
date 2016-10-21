@@ -537,8 +537,10 @@ chown -R $User:$Group /home/$User/.asoundrc
 
 echo "========== Installing PhantomJS for autologin =========="
 
-cd phantomjs && bash install.sh
-cd $Origin
+sudo apt-get install libfontconfig
+curl -o /tmp/phantomjs -sSL https://github.com/fg2it/phantomjs-on-raspberry/releases/download/v2.1.1-wheezy-jessie/phantomjs
+sudo mv /tmp/phantomjs /usr/local/bin/phantomjs
+sudo chmod a+x /usr/local/bin/phantomjs
 
 echo ""
 echo '============================='

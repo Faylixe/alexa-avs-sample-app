@@ -236,7 +236,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
      * @throws Exception If any error occurs while executing client.
      */
     public static void main(final String[] args) throws Exception {
-    	final File binary = new File("../phantomjs/phantomjs");
+    	final File binary = new File("/usr/local/bin/phantomjs");
     	System.setProperty("phantomjs.binary.path", binary.getAbsolutePath());
     	final DeviceConfig configuration = getDeviceConfiguration(args);
     	final AVSApp application = new AVSApp(configuration);
