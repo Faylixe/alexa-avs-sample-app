@@ -187,8 +187,12 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
 	    		.and(
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_email")),
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password"))));
-    	log.info("Auto logging in to LWA");
+    	log.info("Cookies :");
+    	for (final Cookie cookie : driver.manage().getCookies()) {
+    		log.info("({}) {}", cookie.getDomain(), cookie.getName());
+    	}
     	driver.manage().addCookie(new Cookie("foo", "bar"));
+    	log.info("Auto logging in to LWA");
     	final WebElement username = driver.findElement(By.id("ap_email"));
     	final WebElement password = driver.findElement(By.id("ap_password"));
     	username.sendKeys(deviceConfig.getLWAUsername());
