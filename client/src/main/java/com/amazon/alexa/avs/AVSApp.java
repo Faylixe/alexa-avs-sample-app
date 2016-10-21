@@ -12,12 +12,7 @@
  */
 package com.amazon.alexa.avs;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.amazon.alexa.avs.auth.AccessTokenListener;
@@ -30,12 +25,10 @@ import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -243,6 +236,8 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
      * @throws Exception If any error occurs while executing client.
      */
     public static void main(final String[] args) throws Exception {
+    	final File binary = new File("../phantomjs/phantomjs");
+    	System.setProperty("phantomjs.binary.path", binary.getAbsolutePath());
     	final DeviceConfig configuration = getDeviceConfiguration(args);
     	final AVSApp application = new AVSApp(configuration);
     	application.run();
