@@ -173,9 +173,15 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     private void authenticate(final String url) {
     	log.info("Registration URL = {}", url);
     	log.info("Starting phantom JS driver ...");
+    	final String [] args = new String[5];
+    	args[0] = "--ssl-protocol=any";
+    	args[1] = "--ignore-ssl-errors=true";
+    	args[2] = "--ssl-client-certificate-file=" + deviceConfig.getCompanionServiceInfo().getSslCaCert();
+    	args[3] = "--ssl-client-key-file=" + deviceConfig.getCompanionServiceInfo().getSslClientKeyStore();
+    	args[4] = "--ssl-client-key-passphrase=" + deviceConfig.getCompanionServiceInfo().getSslClientKeyStorePassphrase();
     	final DesiredCapabilities capabilites = new DesiredCapabilities();
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
-    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ssl-protocol=any", "--ignore-ssl-errors=true"});
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, args);
     	final WebDriver driver = new PhantomJSDriver(capabilites);
     	driver.get(url);//navigate().to(url);
     	log.info("Current URL : {}", driver.getCurrentUrl());
