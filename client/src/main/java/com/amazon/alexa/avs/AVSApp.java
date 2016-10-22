@@ -260,7 +260,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     public synchronized void onAccessTokenReceived(final String accessToken) {
     	controller.onUserActivity();
     	log.info("Access token received : {}", accessToken);
-        authSetup.onAccessTokenReceived(accessToken);
+        //authSetup.onAccessTokenReceived(accessToken);
     	tokenReceived.set(true);
     }
 
