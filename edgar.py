@@ -25,10 +25,6 @@ def createProcess(command, workingDirectory):
 class Alexa(object):
     """ Alexa services instance manager. """
 
-    def __init__(self):
-        """ Default constructor. """
-        self.registrationURL = None
-
     def startCompanionService(self):
         """ Starts and saves companion service process. """
         self.companionProcess = createProcess('npm start', 'companion/service')
@@ -43,18 +39,7 @@ class Alexa(object):
 
 alexa = Alexa()
 
-@application.route('/registration/url', methods=['GET'])
-def getRegistrationURL():
-    """ Endpoint for getting LWA registration URL as plain text. """
-    print('Registration request URL received')
-    return alexa.registrationURL, 200
-
-@application.route('/registration/url', methods=['POST'])
-def setRegistrationURL():
-    """ Endpoint for setting LWA registration URL. """
-    print('Received registration URL : %s' % request['url'])
-    alexa.registrationURL = request['url']
-    return 'OK', 200
+# TODO : Implements UI based method for edgar managment.
 
 @application.route('/registration/success', methods=['GET'])
 def authentificationSuccess():
@@ -63,6 +48,7 @@ def authentificationSuccess():
     return 'OK', 200
 
 if __name__ == '__main__':
-    #alexa.startCompanionService()
-    #alexa.startClient()
-    application.run(host='0.0.0.0')
+    # TODO : Argparse for port.
+    alexa.startCompanionService()
+    alexa.startClient()
+    application.run(host='0.0.0.0', port=DEFAULT_PORT)
