@@ -24,8 +24,6 @@ import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
@@ -174,12 +172,11 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     private void authenticate(final String url) {
     	log.info("Registration URL = {}", url);
     	log.info("Starting phantom JS driver ...");
-    	final DesiredCapabilities capabilites = new DesiredCapabilities();
+    	final DesiredCapabilities capabilites = DesiredCapabilities.firefox();
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
-    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=/tmp/cookies.txt"});
-    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true", "--cookies-file=/tmp/cookies.txt"});
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"	});
+    	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
     	final PhantomJSDriver driver = new PhantomJSDriver(capabilites);
-    	log.info("Set cookieEnabled at phantom level");
     	driver.get(url);
     	log.info("Title : {}", driver.getTitle());
     	log.info("URL : {}", driver.getCurrentUrl());
@@ -188,11 +185,6 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
 	    		.and(
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_email")),
 	    				ExpectedConditions.presenceOfElementLocated(By.id("ap_password"))));
-    	log.info("Cookies :");
-    	for (final Cookie cookie : driver.manage().getCookies()) {
-    		log.info("({}) {}", cookie.getDomain(), cookie.getName());
-    	}
-    	driver.manage().addCookie(new Cookie("foo", "bar"));
     	log.info("Auto logging in to LWA");
     	final WebElement username = driver.findElement(By.id("ap_email"));
     	final WebElement password = driver.findElement(By.id("ap_password"));
