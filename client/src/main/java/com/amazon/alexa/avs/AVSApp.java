@@ -24,6 +24,8 @@ import com.amazon.alexa.avs.http.AVSClientFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordDetectedHandler;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
@@ -167,10 +169,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     
     /**
      * 
-     * @param url
+     * @return
      */
-    private void authenticate(final String url) {
-    	log.info("Registration URL = {}", url);
+    private WebDriver createDriver() {
     	log.info("Starting phantom JS driver ...");
     	final DesiredCapabilities capabilites = DesiredCapabilities.firefox();
     	final String ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit";
@@ -178,10 +179,15 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"	});
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
-    	final PhantomJSDriver driver = new PhantomJSDriver(capabilites);
-    	driver.get(url);
-    	log.info("Title : {}", driver.getTitle());
-    	log.info("URL : {}", driver.getCurrentUrl());
+    	return new PhantomJSDriver(capabilites);
+    }
+    
+    /**
+     * 
+     * @param driver
+     */
+    private void authenticate(final WebDriver driver) {
+    	log.debug("Title : {}", driver.getTitle());
     	new WebDriverWait(driver, 1000)
     		.until(ExpectedConditions
 	    		.and(
@@ -194,6 +200,34 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	password.sendKeys(deviceConfig.getLWAPassword());
     	final WebElement button = driver.findElement(By.tagName("button"));
     	button.click();
+    }
+
+    /**
+     * 
+     * @param driver
+     */
+    private void validateAgreement(final WebDriver driver) {
+    	try {
+    		// TODO : Consider using driver wait with timeout.
+	    	final WebElement button = driver.findElement(By.name("consentApproved"));
+	    	button.click();
+    	}
+    	catch (final NoSuchElementException e) {
+    		log.info("Agreement not found, abort validation");
+    	}
+    }
+    
+    /**
+     * 
+     * @param url
+     */
+    private void authenticate(final String url) {
+    	log.info("Registration URL = {}", url);
+    	final WebDriver driver = createDriver();
+    	driver.get(url);
+    	authenticate(driver);
+    	log.info("Authentification done, check for agreemennt validation");
+    	validateAgreement(driver);
     	log.info(driver.getPageSource());
     	log.info("Waiting for authentification callback to be triggered");
     	while (!tokenReceived.get()) {
