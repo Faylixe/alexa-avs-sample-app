@@ -230,15 +230,15 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	validateAgreement(driver);
     	log.info(driver.getPageSource());
     	log.info("Waiting for authentification callback to be triggered");
-    	while (!tokenReceived.get()) {
-    		try {
-    			Thread.sleep(1000);
-    		}
-    		catch (final InterruptedException e) {
-    			log.error("Waiting thread interrupted", e);
-    			break;
-    		}
-    	}
+//    	while (!tokenReceived.get()) {
+//    		try {
+//    			Thread.sleep(1000);
+//    		}
+//    		catch (final InterruptedException e) {
+//    			log.error("Waiting thread interrupted", e);
+//    			break;
+//    		}
+//    	}
     	driver.quit();
     }
     
