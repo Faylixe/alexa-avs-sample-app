@@ -38,6 +38,8 @@ import org.slf4j.LoggerFactory;
 import com.amazon.alexa.avs.wakeword.WakeWordIPCFactory;
 
 /**
+ * Refactored class from original sample which do not use any
+ * Swing dependencies and provides auto login facilities.
  * 
  * @author fv
  */
@@ -59,7 +61,7 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     /** Configuration provided by user for this device. **/
     private final DeviceConfig deviceConfig;
 
-    /** **/
+    /** Authentification setup. **/
     private AuthSetup authSetup;
     
     /** Client state. **/
@@ -101,6 +103,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
         controller.startHandlingDirectives();
     }
     
+    /**
+     * 
+     */
     private void onWakeWordDetected2() {
     	controller.onUserActivity();
     	final RecordingRMSListener rmsListener = this;
@@ -168,8 +173,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
     
     /**
+     * Created PhantomJSDriver instance.
      * 
-     * @return
+     * @return Created driver instance.
      */
     private WebDriver createDriver() {
     	log.info("Starting phantom JS driver ...");
@@ -183,8 +189,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
     
     /**
+     * Performs amazon LWA login using the given <tt>driver</tt>.
      * 
-     * @param driver
+     * @param driver Driver which is already configured to LWA login page.
      */
     private void authenticate(final WebDriver driver) {
     	log.debug("Title : {}", driver.getTitle());
@@ -203,8 +210,9 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
 
     /**
+     * Validates usage agreement if available.
      * 
-     * @param driver
+     * @param driver Driver which is already configured to usage agreement.
      */
     private void validateAgreement(final WebDriver driver) {
     	try {
@@ -218,27 +226,22 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
     
     /**
+     * Authenticates this client to LWA.
      * 
-     * @param url
+     * @param url Login URL to perform authentification to.
      */
     private void authenticate(final String url) {
     	log.info("Registration URL = {}", url);
     	final WebDriver driver = createDriver();
     	driver.get(url);
+    	// TODO : Consider adding sleep to ensure page loading.
     	authenticate(driver);
     	log.info("Authentification done, check for agreemennt validation");
+    	// TODO : Consider adding sleep to ensure page loading.
     	validateAgreement(driver);
     	log.info(driver.getPageSource());
     	log.info("Waiting for authentification callback to be triggered");
-//    	while (!tokenReceived.get()) {
-//    		try {
-//    			Thread.sleep(1000);
-//    		}
-//    		catch (final InterruptedException e) {
-//    			log.error("Waiting thread interrupted", e);
-//    			break;
-//    		}
-//    	}
+    	// TODO : Consider adding sleep to ensure page loading.
     	driver.quit();
     }
     
@@ -287,9 +290,10 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     }
     
     /**
+     * Loads device configuration from provided command line arguments.
      * 
-     * @param args
-     * @return
+     * @param args Command line argument to load configuration from.
+     * @return Loaded configuration.
      */
     private static DeviceConfig getDeviceConfiguration(final String [] args) {
     	if (args.length == 0) {
