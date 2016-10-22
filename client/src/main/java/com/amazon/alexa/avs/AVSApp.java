@@ -173,6 +173,8 @@ public final class AVSApp implements ExpectSpeechListener, RecordingRMSListener,
     	log.info("Registration URL = {}", url);
     	log.info("Starting phantom JS driver ...");
     	final DesiredCapabilities capabilites = DesiredCapabilities.firefox();
+    	final String ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:36.0) Gecko/20100101 Firefox/36.0 WebKit";
+    	capabilites.setCapability("phantomjs.page.settings.userAgent", ua);
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_EXECUTABLE_PATH_PROPERTY, "/usr/local/bin/phantomjs");
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_GHOSTDRIVER_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"	});
     	capabilites.setCapability(PhantomJSDriverService.PHANTOMJS_CLI_ARGS, new String[]{"--ignore-ssl-errors=true"});
