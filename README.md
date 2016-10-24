@@ -3,6 +3,8 @@
 Edgar is a coordination application for using Alexa into Raspberry Pi devices. Forked from the original
 [AVS sample](https://github.com/alexa/alexa-avs-sample-app).
 
+Allows to run AVS sample without having a desktop installed into pi, as web browser as well.
+
 ## Installation
 
 Installation process is the same that the original sample, just run the following command :
