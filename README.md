@@ -10,8 +10,10 @@ Installation process is the same that the original sample, just run the followin
 ```bash
 git clone https://github.com/Faylixe/edgar.git
 cd edgar
-./automated_install.sh
+./install.sh /path/to/your/configuration.xml
 ```
+
+You can directly edit the ``installation_sample.xml`` and add your information. For more information about Amazon account creation, see [original project guide](https://github.com/alexa/alexa-avs-sample-app/wiki/Raspberry-Pi)
 
 ## Usage
 
@@ -28,4 +30,3 @@ This will performs all required step namely :
 ## Current issues
 
 - Add a web interface for management
-- Clean installation script to integrate LWA credentials into generated configuration
