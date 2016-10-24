@@ -1,10 +1,12 @@
 #!/usr/bin/bash
 
+
 # Installation relative variables.
 os=rpi
 user=$(id -un)
 group=$(id -gn)
 origin=$(pwd)
+xslt=$origin/xslt
 client=$origin/client
 wakeword=$origin/wakeword
 companion=$origin/companion/service
@@ -37,19 +39,6 @@ subheader() {
   echo "=========== $1 ==========="
 }
 
-# Generates $2 file using $1 template.
-generate() {
-  delete $2
-  while IFS='' read -r line || [[ -n "$line" ]]; do
-    while [[ "$line" =~ (\$\{[a-zA-Z_][a-zA-Z_0-9]*\}) ]]; do
-      LHS=${BASH_REMATCH[1]}
-      RHS="$(eval echo "\"$LHS\"")"
-      line=${line//$LHS/$RHS}
-    done
-    echo "$line" >> "$2"
-  done < "$1"
-}
-
 # Deletes given $1 file if exists.
 delete() {
   if [ -f $1 ]; then
@@ -76,7 +65,7 @@ subheader "Installing required tools and libraries through aptitude"
 sudo apt-get update
 sudo apt-get upgrade -y
 sudo apt-get install -y git libasound2-dev libatlas-base-dev vlc vlc-nox \
-vlc-data nodejs npm build-essential maven openssl cmake libfontconfig
+vlc-data nodejs npm build-essential maven openssl cmake libfontconfig xalan
 sudo sh -c "echo \"/usr/lib/vlc\" >> /etc/ld.so.conf.d/vlc_lib.conf"
 sudo sh -c "echo \"VLC_PLUGIN_PATH=\"/usr/lib/vlc/plugin\"\" >> /etc/environment"
 sudo ln -s /usr/bin/nodejs /usr/bin/node
@@ -88,15 +77,16 @@ printf "pcm.!default {\n  type asym\n   playback.pcm {\n     type plug\n     sla
 
 subheader "Installing and configuring Java client"
 cd $client
-generate template_ssl_cnf ssl.cnf
-generate template_generate_sh generate.sh
-generate template_config_json config.json
+xalan -in template_ssl_cnf -out ssl.cnf -xsl $xslt/ssl_configuration.xsl
+xalan -in template_generate_sh -out generate.sh -xsl $xslt/client_certificate_generator.xsl
+xalan -in template_config_json -out config.json -xsl $xslt/client_configuration.xsl
 chmod +x generate.sh
 bash ./generate.sh
 mvn validate && mvn install
 
 subheader "Installing companion service"
 cd $companion
+xalan -in template_config_js -out config.js -xsl $xslt/companion_configuration.xsl
 generate template_config_js config.js
 npm install
 

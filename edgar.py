@@ -39,7 +39,7 @@ class Alexa(object):
 
 alexa = Alexa()
 
-# TODO : Implements UI based method for edgar managment.
+# TODO : Implements UI based method for edgar managment ?.
 
 @application.route('/registration/success', methods=['GET'])
 def authentificationSuccess():
@@ -48,7 +48,7 @@ def authentificationSuccess():
     return 'OK', 200
 
 if __name__ == '__main__':
-    # TODO : Argparse for port.
+    # TODO : Argparse for port and hostname.
     alexa.startCompanionService()
     alexa.startClient()
     application.run(host='0.0.0.0', port=DEFAULT_PORT)
