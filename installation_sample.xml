@@ -22,6 +22,7 @@
   <!-- Device related configuration -->
   <device>
     <serialNumber>1xxxxxxxxxx</serialNumber>
+    <wakeword>true</wakeword>
     <keystore>
       <password></password> <!-- Leave blank if you want. -->
     </keystore>

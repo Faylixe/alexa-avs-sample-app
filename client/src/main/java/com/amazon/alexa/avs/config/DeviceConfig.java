@@ -27,7 +27,7 @@ import javax.json.JsonObjectBuilder;
  */
 public class DeviceConfig {
     private static final String DEFAULT_HOST = "https://avs-alexa-na.amazon.com";
-    public static final String FILE_NAME = "config.json";
+    public static final String FILE_NAME = "configuration.json";
 
     public static final String PRODUCT_ID = "productId";
     public static final String DSN = "dsn";

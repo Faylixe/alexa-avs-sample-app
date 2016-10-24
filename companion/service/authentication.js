@@ -1,7 +1,7 @@
 ﻿var crypto = require('crypto');
 var https = require('https');
 var uuid = require('node-uuid');
-var config = require("./config");
+var config = require("./configuration");
 
 var auth = {};
 
@@ -23,7 +23,7 @@ var lwaProdAuthUrl = oAuthServer + '?client_id=' + config.clientId + '&response_
 
 /**
  * Create an error object to return to the user.
- * 
+ *
  * @param name The name of the error.
  * @param msg The message associated with the error.
  * @param status The HTTP status code for the error.
@@ -39,7 +39,7 @@ function error(name, msg, status) {
 
 /**
  * Create an object of relevant LWA HTTP request information.
- * 
+ *
  * @param urlPath The LWA host.
  * @returns LWA HTTP request information.
  */
@@ -58,7 +58,7 @@ function getLwaPostOptions(urlPath) {
 
 /**
  * Redirect the user to the LWA page to authenticate.
- * 
+ *
  * @param deviceInfo Device information including productId and dsn.
  * @param regCode The regCode passed in from the user.
  * @param res The HTTP response object.
@@ -82,7 +82,7 @@ function redirectToDeviceAuthenticate(deviceInfo, regCode, res) {
 
 /**
  * Determine if the user provided productId and dsn match the known map.
- * 
+ *
  * @param productId The productId.
  * @param dsn The dsn.
  * @returns {Boolean}
@@ -101,9 +101,9 @@ function isValidDevice(productId, dsn) {
 
 /**
  * Generate a registration code for a device, and map it to the device.
- * 
+ *
  * The registration code is used by the user as a key to know what device to associate tokens with.
- * 
+ *
  * @param productId The productId.
  * @param dsn The dsn.
  * @param callback The callback(err, json) to return data to the user.
@@ -155,9 +155,9 @@ auth.getRegCode = function(productId, dsn, callback) {
 
 /**
  * Get an accessToken associated with the sessionId.
- * 
+ *
  * Makes a request to LWA to get accessToken given the stored refreshToken.
- * 
+ *
  * @param sessionId The sessionId for this device.
  * @param callback The callback(err, json) to return data to the user.
  */
@@ -231,7 +231,7 @@ auth.getAccessToken = function(sessionId, callback) {
 
 /**
  * Redirects the user to the LWA login page to enter their username and password.
- * 
+ *
  * @param regCode The registration code that was presented to the user and maps their request to the device that generated the registration code.
  * @param res The HTTP response object.
  * @param callback The callback(err, json) to return data to the user.
@@ -249,7 +249,7 @@ auth.register = function (regCode, res, callback) {
 
 /**
  * Performs the initial request for refreshToken after the user has logged in and redirected to /authresponse.
- * 
+ *
  * @param authCode The authorization code that was included in the redirect from LWA.
  * @param stateCode The state code that we use to map a redirect from LWA back to device information.
  * @param callback The callback(err, json) to return data to the user.
@@ -290,7 +290,7 @@ auth.authresponse = function (authCode, stateCode, callback) {
         res.on('end', function () {
             if (res.statusCode === 200 && resultBuffer !== null) {
                 var result = JSON.parse(resultBuffer);
-                
+
                 sessionIdToRefreshToken[sessionId] = result.refresh_token;
                 callback(null, "device tokens ready");
             } else {

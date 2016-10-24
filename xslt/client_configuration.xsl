@@ -3,6 +3,8 @@
   <xsl:template match="/configuration">
     {
       "productId":"<xsl:valueof select="credentials/application/productId"/>",
+      "username": "<xsl:valueof select="credentials/lwa/email"/>",
+      "password": "<xsl:valueof select="credentials/lwa/password"/>",
       "dsn":"<xsl:valueof select="device/serialNumber"/>",
       "provisioningMethod":"companionService",
       "wakeWordAgentEnabled": <xsl:valueof select="device/wakeword"/>,

@@ -82,14 +82,14 @@ subheader "Installing and configuring Java client"
 cd $client
 xalan -in $configuration -out ssl.cnf -xsl $xslt/ssl_configuration.xsl
 xalan -in $configuration -out generate.sh -xsl $xslt/client_certificate_generator.xsl
-xalan -in $configuration -out config.json -xsl $xslt/client_configuration.xsl -param javaclient $client
+xalan -in $configuration -out configuration.json -xsl $xslt/client_configuration.xsl -param javaclient $client
 chmod +x generate.sh
 bash ./generate.sh
 mvn validate && mvn install
 
 subheader "Installing companion service"
 cd $companion
-xalan -in $configuration -out config.js -xsl $xslt/companion_configuration.xsl -param javaclient $client
+xalan -in $configuration -out configuration.js -xsl $xslt/companion_configuration.xsl -param javaclient $client
 generate template_config_js config.js
 npm install
 
