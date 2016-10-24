@@ -75,9 +75,9 @@ app.get('/authresponse', function (req, res) {
             res.send({ error: err.name, message: err.message });
         } else {
             res.send(reply);
-            //http.get('http://localhost:6969/registration/success').on(function(e) {
-            //  console.log('An error occurs while waking up agent : ' + e);
-            //});
+            http.get('http://localhost:6969/registration/success').on(function(e) {
+              console.log('An error occurs while waking up agent : ' + e);
+            });
         }
     });
 });
