@@ -1,0 +1,27 @@
+<?xml version="1.0">
+<configuration>
+  <!-- Credentials of the application -->
+  <credentials>
+    <application>
+      <productId>YOUR_PRODUCT_ID_HERE</ProductId>
+      <clientId>YOUR_CLIENT_ID_HERE</clientId>
+      <clientSecret>YOUR_CLIENT_SECRET_HERE</clientSecret>
+    </application>
+    <lwa>
+      <email>YOUR_LWA_EMAIL</email>
+      <password>YOUR_LWA_PASSWORD</password>
+    </lwa>
+  </credentials>
+  <!-- Users related configuration -->
+  <profile>
+    <country>FR</country>
+    <state>PACA</state>
+    <city>SAUSSET-LES-PINS</city>
+    <organization>AVS_USER</organization>
+  </profile>
+  <!-- Device related configuration -->
+  <device>
+    <serialNumber>1xxxxxxxxxx</serialNumber>
+    <KeyStorePassword></KeyStorePassword> <!-- Leave blank if you want. -->
+  </device>
+</configuration>
