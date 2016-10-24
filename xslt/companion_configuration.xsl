@@ -1,5 +1,6 @@
 <?xml version="1.0">
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <xsl:param name="javaclient"></xsl:param>
   <xsl:template match="/configuration">
     /**
      * @module
@@ -23,9 +24,9 @@
         lwaRedirectHost: "amazon.com",
         lwaApiHost: "api.amazon.com",
         validateCertChain: true,
-        sslKey: "${Java_Client_Loc}/certs/server/node.key",
-        sslCert: "${Java_Client_Loc}/certs/server/node.crt",
-        sslCaCert: "${Java_Client_Loc}/certs/ca/ca.crt",
+        sslKey: "<xsl:valueof select="$javaclient"/>/certs/server/node.key",
+        sslCert: "<xsl:valueof select="$javaclient"/>/certs/server/node.crt",
+        sslCaCert: "<xsl:valueof select="$javaclient"/>/certs/ca/ca.crt",
         products: {
             "<xsl:valueof select="credentials/application/productId"/>": ["<xsl:valueof select="device/serialNumber"/>"],
         },

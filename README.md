@@ -13,7 +13,7 @@ cd edgar
 ./install.sh /path/to/your/configuration.xml
 ```
 
-You can directly edit the ``installation_sample.xml`` and add your information. For more information about Amazon account creation, see [original project guide](https://github.com/alexa/alexa-avs-sample-app/wiki/Raspberry-Pi)
+You can directly edit the ``installation_sample.xml`` and add your informations. For more details about Amazon account creation, see [original project guide](https://github.com/alexa/alexa-avs-sample-app/wiki/Raspberry-Pi)
 
 ## Usage
 

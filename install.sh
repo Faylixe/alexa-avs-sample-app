@@ -1,5 +1,8 @@
 #!/usr/bin/bash
 
+# TODO : Check if configuration file is provided as parameters.
+
+configuration=''
 
 # Installation relative variables.
 os=rpi
@@ -77,16 +80,16 @@ printf "pcm.!default {\n  type asym\n   playback.pcm {\n     type plug\n     sla
 
 subheader "Installing and configuring Java client"
 cd $client
-xalan -in template_ssl_cnf -out ssl.cnf -xsl $xslt/ssl_configuration.xsl
-xalan -in template_generate_sh -out generate.sh -xsl $xslt/client_certificate_generator.xsl
-xalan -in template_config_json -out config.json -xsl $xslt/client_configuration.xsl
+xalan -in $configuration -out ssl.cnf -xsl $xslt/ssl_configuration.xsl
+xalan -in $configuration -out generate.sh -xsl $xslt/client_certificate_generator.xsl
+xalan -in $configuration -out config.json -xsl $xslt/client_configuration.xsl -param javaclient $client
 chmod +x generate.sh
 bash ./generate.sh
 mvn validate && mvn install
 
 subheader "Installing companion service"
 cd $companion
-xalan -in template_config_js -out config.js -xsl $xslt/companion_configuration.xsl
+xalan -in $configuration -out config.js -xsl $xslt/companion_configuration.xsl -param javaclient $client
 generate template_config_js config.js
 npm install
 
