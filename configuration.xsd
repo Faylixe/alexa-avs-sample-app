@@ -1,0 +1,68 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="configuration">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="credentials">
+          <xs:annotation>
+            <xs:documentation>Credentials of the application</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="application">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="productId"/>
+                    <xs:element type="xs:string" name="clientId"/>
+                    <xs:element type="xs:string" name="clientSecret"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="lwa">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="email"/>
+                    <xs:element type="xs:string" name="password"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="profile">
+          <xs:annotation>
+            <xs:documentation>Users related configuration</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="country"/>
+              <xs:element type="xs:string" name="state"/>
+              <xs:element type="xs:string" name="city"/>
+              <xs:element type="xs:string" name="organization"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="device">
+          <xs:annotation>
+            <xs:documentation>Device related configuration</xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="serialNumber"/>
+              <xs:element type="xs:string" name="wakeword"/>
+              <xs:element name="keystore">
+                <xs:annotation>
+                  <xs:documentation>Leave blank if you want.</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="password"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

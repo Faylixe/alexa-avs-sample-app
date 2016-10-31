@@ -1,8 +1,10 @@
 #!/usr/bin/bash
 
-# TODO : Check if configuration file is provided as parameters.
-
-configuration=''
+configuration=$1
+if xmllint --noout $configuration --schema configuration.xsd then
+  echo 'Invalid configuration file provided'
+  exit 1
+fi
 
 # Installation relative variables.
 os=rpi

@@ -1,9 +1,9 @@
-<?xml version="1.0">
+<?xml version="1.0"?>
 <configuration>
   <!-- Credentials of the application -->
   <credentials>
     <application>
-      <productId>YOUR_PRODUCT_ID_HERE</ProductId>
+      <productId>YOUR_PRODUCT_ID_HERE</productId>
       <clientId>YOUR_CLIENT_ID_HERE</clientId>
       <clientSecret>YOUR_CLIENT_SECRET_HERE</clientSecret>
     </application>
