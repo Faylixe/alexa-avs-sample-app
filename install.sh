@@ -1,7 +1,8 @@
 #!/bin/bash
 
 configuration=$1
-if xmllint --noout $configuration --schema configuration.xsd then
+if xmllint --noout $configuration --schema configuration.xsd
+then
   echo 'Invalid configuration file provided'
   exit 1
 fi
