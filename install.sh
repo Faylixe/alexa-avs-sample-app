@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 configuration=$1
 if xmllint --noout $configuration --schema configuration.xsd then
